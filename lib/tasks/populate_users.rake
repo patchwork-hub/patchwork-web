@@ -6,11 +6,11 @@ namespace :populate do
     domain = domain.gsub(/:\d+$/, '')
     500.times do |i|
       i += 1
-      account = Account.where(username: "10SeptUser#{i}").first_or_initialize(username: "10SeptUser#{i}")
+      account = Account.where(username: "12SeptUser#{i}").first_or_initialize(username: "12SeptUser#{i}")
       account.save(validate: false)
 
-      user = User.where(email: "10SeptUser#{i}@#{domain}").first_or_initialize(
-        email: "10SeptUser#{i}@#{domain}",
+      user = User.where(email: "12SeptUser#{i}@#{domain}").first_or_initialize(
+        email: "12SeptUser#{i}@#{domain}",
         password: 'password',
         password_confirmation: 'password',
         confirmed_at: Time.now.utc,
