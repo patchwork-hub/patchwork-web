@@ -9,14 +9,14 @@ GIT
 
 GIT
   remote: https://github.com/patchwork-hub/content_filters
-  revision: c95983dcaa5d20cb2a6c18e50fad04ed0d31687b
+  revision: a1c1f20fa23c739ed89e202b5ff7ce49830387b6
   specs:
     content_filters (0.1.0)
       rails (>= 7.1.3.3)
 
 GIT
   remote: https://github.com/patchwork-hub/posts
-  revision: fef40b74cdd00e02bc3151819e8072d1ccd38ffb
+  revision: 1b597f1adade4ddcf58ed7b8a4b6c4ef37a49d0f
   specs:
     posts (0.1.0)
       byebug
