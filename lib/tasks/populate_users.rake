@@ -4,7 +4,7 @@ namespace :populate do
   task users: :environment do
     domain = ENV['LOCAL_DOMAIN'] || Rails.configuration.x.local_domain
     domain = domain.gsub(/:\d+$/, '')
-    dummy_name = '10OctUser2'
+    dummy_name = '10OctUser3'
     10.times do |i|
       i += 1
       account = Account.where(username: "#{dummy_name}#{i}").first_or_initialize(username: "#{dummy_name}#{i}")
