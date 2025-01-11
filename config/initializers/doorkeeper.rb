@@ -9,9 +9,16 @@ Doorkeeper.configure do
     current_user || redirect_to(new_user_session_url)
   end
 
-  # Disable Resource Owner Password Credentials Grant Flow
-  resource_owner_from_credentials do
-    nil
+  resource_owner_from_credentials do |_routes|
+    user   = User.authenticate_with_ldap(email: request.params[:username], password: request.params[:password]) if Devise.ldap_authentication
+    user ||= User.authenticate_with_pam(email: request.params[:username], password: request.params[:password]) if Devise.pam_authentication
+
+    if user.nil?
+      user = User.find_by(email: request.params[:username])
+      user = nil unless user&.valid_password?(request.params[:password])
+    end
+
+    user unless user&.otp_required_for_login?
   end
 
   # Doorkeeper provides some administrative interfaces for managing OAuth
@@ -47,7 +54,7 @@ Doorkeeper.configure do
 
   # Reuse access token for the same resource owner within an application (disabled by default)
   # Rationale: https://github.com/doorkeeper-gem/doorkeeper/issues/383
-  reuse_access_token
+  # reuse_access_token
 
   # Issue access tokens with refresh token (disabled by default)
   # use_refresh_token
@@ -112,7 +119,6 @@ Doorkeeper.configure do
                   :'admin:write:ip_blocks',
                   :'admin:write:email_domain_blocks',
                   :'admin:write:canonical_email_blocks'
-
   # Change the way client credentials are retrieved from the request object.
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then
   # falls back to the `:client_id` and `:client_secret` params from the `params` object.
@@ -139,7 +145,7 @@ Doorkeeper.configure do
   force_ssl_in_redirect_uri false
 
   # Specify what redirect URI's you want to block during Application creation.
-  # Any redirect URI is allowed by default.
+  # Any redirect URI is whitelisted by default.
   #
   # You can use this option in order to forbid URI's with 'javascript' scheme
   # for example.
